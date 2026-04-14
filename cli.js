@@ -118,11 +118,12 @@ async function main() {
 
 function formatContextBlock(memories) {
   const sections = {
-    technologies: [],
-    decisions: [],
-    insights: [],
-    achievements: [],
-    problems: []
+    technology: [],
+    decision: [],
+    insight: [],
+    achievement: [],
+    problem: [],
+    topic: []
   };
 
   // Group memories by type
@@ -136,41 +137,49 @@ function formatContextBlock(memories) {
   // Build formatted block
   let output = '\n[Threadkeeper] RELEVANT CONTEXT FROM YOUR PREVIOUS WORK:\n\n';
 
-  if (sections.decisions.length > 0) {
+  if (sections.decision.length > 0) {
     output += '📋 Key Decisions Made:\n';
-    sections.decisions.forEach((d, i) => {
+    sections.decision.forEach((d, i) => {
       output += `   ${i + 1}. ${d}\n`;
     });
     output += '\n';
   }
 
-  if (sections.technologies.length > 0) {
+  if (sections.technology.length > 0) {
     output += '🔧 Technologies & Tools Used:\n';
-    sections.technologies.forEach((t, i) => {
+    sections.technology.forEach((t, i) => {
       output += `   ${i + 1}. ${t}\n`;
     });
     output += '\n';
   }
 
-  if (sections.achievements.length > 0) {
+  if (sections.achievement.length > 0) {
     output += '✅ Achievements:\n';
-    sections.achievements.forEach((a, i) => {
+    sections.achievement.forEach((a, i) => {
       output += `   ${i + 1}. ${a}\n`;
     });
     output += '\n';
   }
 
-  if (sections.insights.length > 0) {
+  if (sections.topic.length > 0) {
+    output += '📚 Topics Covered:\n';
+    sections.topic.forEach((t, i) => {
+      output += `   ${i + 1}. ${t}\n`;
+    });
+    output += '\n';
+  }
+
+  if (sections.insight.length > 0) {
     output += '💡 Key Insights:\n';
-    sections.insights.forEach((i, idx) => {
+    sections.insight.forEach((i, idx) => {
       output += `   ${idx + 1}. ${i}\n`;
     });
     output += '\n';
   }
 
-  if (sections.problems.length > 0) {
+  if (sections.problem.length > 0) {
     output += '⚠️ Problems Solved:\n';
-    sections.problems.forEach((p, i) => {
+    sections.problem.forEach((p, i) => {
       output += `   ${i + 1}. ${p}\n`;
     });
     output += '\n';

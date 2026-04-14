@@ -229,7 +229,7 @@ threadkeeper --version
 
 ✅ **Audit Logging**
 - Every extraction recorded
-- Location: `~/.cognexia/audit-logs/`
+- Location: `~/.threadkeeper/audit-logs/`
 - You can review anytime
 
 ✅ **Hook Integrity**
@@ -404,7 +404,7 @@ A: Negligible. <10ms per search.
 ```bash
 rm ~/.claude/hooks/session-start.js
 rm ~/.claude/hooks/.session-start.sha256
-rm -rf ~/.cognexia/
+rm -rf ~/.threadkeeper/
 ```
 
 See [USER_GUIDE.md](./USER_GUIDE.md) for complete FAQ.

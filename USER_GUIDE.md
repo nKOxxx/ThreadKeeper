@@ -281,7 +281,7 @@ Threadkeeper extracts from your chats:
 
 ✅ **Audit Logging**
 - Every data extraction is logged
-- Location: `~/.cognexia/audit-logs/`
+- Location: `~/.threadkeeper/audit-logs/`
 - You can review and delete anytime
 
 ✅ **Hook Integrity Verification**
@@ -314,20 +314,20 @@ Instead:
 
 ```bash
 # View your audit logs
-cat ~/.cognexia/audit-logs/*.jsonl | jq .
+cat ~/.threadkeeper/audit-logs/*.jsonl | jq .
 
 # See what was filtered
-grep "action.*filter" ~/.cognexia/audit-logs/*.jsonl | jq .
+grep "action.*filter" ~/.threadkeeper/audit-logs/*.jsonl | jq .
 
 # Count detections
-grep "action.*detect" ~/.cognexia/audit-logs/*.jsonl | wc -l
+grep "action.*detect" ~/.threadkeeper/audit-logs/*.jsonl | wc -l
 ```
 
 ### Deleting Everything
 
 ```bash
 # Remove all Threadkeeper data
-rm -rf ~/.cognexia/
+rm -rf ~/.threadkeeper/
 rm ~/.claude/hooks/session-start.js
 rm ~/.claude/hooks/.session-start.sha256
 ```
@@ -385,8 +385,8 @@ This is normal and one-time only.
 
 ### "Help! I accidentally exposed a credential"
 
-1. **Delete the memory:** Remove problematic memories from `~/.cognexia/data-lake/`
-2. **Clear audit logs:** `rm ~/.cognexia/audit-logs/*`
+1. **Delete the memory:** Remove problematic memories from `~/.threadkeeper/data-lake/`
+2. **Clear audit logs:** `rm ~/.threadkeeper/audit-logs/*`
 3. **Rotate the credential:** Change password/API key in your actual service
 4. **Reinstall:** `npx threadkeeper install` to rebuild baseline
 
@@ -404,11 +404,11 @@ A: No. Everything stays local. No cloud storage, no external APIs, no network tr
 
 ### Q: Can I use Threadkeeper on multiple machines?
 
-A: No. Memory databases are local to `~/.cognexia/`. To use on multiple machines, you'd need to manually sync the folder (not recommended due to security).
+A: No. Memory databases are local to `~/.threadkeeper/`. To use on multiple machines, you'd need to manually sync the folder (not recommended due to security).
 
 ### Q: What if I delete my chat history?
 
-A: Threadkeeper keeps a separate copy in `~/.cognexia/`. Deleting chats won't affect your memories unless you manually delete the data-lake folder.
+A: Threadkeeper keeps a separate copy in `~/.threadkeeper/`. Deleting chats won't affect your memories unless you manually delete the data-lake folder.
 
 ### Q: Is there a performance cost?
 
@@ -427,12 +427,12 @@ A: Threadkeeper only works with Claude Code. Claude Projects are separate and no
 ```bash
 rm ~/.claude/hooks/session-start.js
 rm ~/.claude/hooks/.session-start.sha256
-rm -rf ~/.cognexia/
+rm -rf ~/.threadkeeper/
 ```
 
 ### Q: Can I export my memories?
 
-A: Not yet (v0.2 feature). Memories are stored in SQLite databases in `~/.cognexia/data-lake/`. You can query them directly if needed.
+A: Not yet (v0.2 feature). Memories are stored in SQLite databases in `~/.threadkeeper/data-lake/`. You can query them directly if needed.
 
 ### Q: What happens if Claude Code updates?
 
@@ -458,16 +458,16 @@ View the structure:
 
 ```bash
 # List memory databases
-ls -la ~/.cognexia/data-lake/
+ls -la ~/.threadkeeper/data-lake/
 
 # Query with sqlite3
-sqlite3 ~/.cognexia/data-lake/memory--project-name/bridge.db
+sqlite3 ~/.threadkeeper/data-lake/memory--project-name/bridge.db
 
 # See table schema
-sqlite3 ~/.cognexia/data-lake/memory--project-name/bridge.db ".schema"
+sqlite3 ~/.threadkeeper/data-lake/memory--project-name/bridge.db ".schema"
 
 # View all memories
-sqlite3 ~/.cognexia/data-lake/memory--project-name/bridge.db "SELECT * FROM memories LIMIT 10;"
+sqlite3 ~/.threadkeeper/data-lake/memory--project-name/bridge.db "SELECT * FROM memories LIMIT 10;"
 ```
 
 ### Clearing Old Memories
@@ -476,10 +476,10 @@ If you want to remove old memories and start fresh:
 
 ```bash
 # Backup first (important!)
-cp -r ~/.cognexia ~/.cognexia.backup
+cp -r ~/.threadkeeper ~/.threadkeeper.backup
 
 # Remove all memories
-rm -rf ~/.cognexia/data-lake/*
+rm -rf ~/.threadkeeper/data-lake/*
 
 # Reinstall to rebuild baseline
 npx threadkeeper install

@@ -61,7 +61,7 @@ const filtered = "I set up the database with [REDACTED-password]"
 
 **Audit log location:**
 ```
-~/.cognexia/audit-logs/audit-{timestamp}.jsonl
+~/.threadkeeper/audit-logs/audit-{timestamp}.jsonl
 ```
 
 **Example audit entry:**
@@ -80,13 +80,13 @@ const filtered = "I set up the database with [REDACTED-password]"
 **How to review:**
 ```bash
 # View recent audit logs
-cat ~/.cognexia/audit-logs/*.jsonl | tail -50
+cat ~/.threadkeeper/audit-logs/*.jsonl | tail -50
 
 # Parse and pretty-print
-cat ~/.cognexia/audit-logs/*.jsonl | jq .
+cat ~/.threadkeeper/audit-logs/*.jsonl | jq .
 
 # Find all detections
-grep "action.*detect" ~/.cognexia/audit-logs/*.jsonl | wc -l
+grep "action.*detect" ~/.threadkeeper/audit-logs/*.jsonl | wc -l
 ```
 
 ### 3. Hook File Integrity Verification
@@ -123,7 +123,7 @@ const result = HookSigner.verifyHook(hookPath)
 **What it does:**
 - Encrypts sensitive memories in SQLite storage
 - Uses AES-256-CBC encryption
-- Key stored in `~/.cognexia/.encryption-key`
+- Key stored in `~/.threadkeeper/.encryption-key`
 
 **Status:** Available for v0.2+ (not enabled by default in v0.1)
 
@@ -151,7 +151,7 @@ const result = HookSigner.verifyHook(hookPath)
 6. User shown security summary:
    "⚠️ Sensitive data detected: 5 times
     Memories filtered: 2
-    Audit log: ~/.cognexia/audit-logs/"
+    Audit log: ~/.threadkeeper/audit-logs/"
 ```
 
 ### Runtime Behavior
@@ -201,7 +201,7 @@ Inject memories into session prompt
    - Use strong passwords and 2FA
 
 3. **Review audit logs periodically**
-   - Check `~/.cognexia/audit-logs/` occasionally
+   - Check `~/.threadkeeper/audit-logs/` occasionally
    - Look for unexpected sensitive data patterns
    - Delete audit logs when done (they're logged locally)
 
@@ -216,14 +216,14 @@ Inject memories into session prompt
 ### Information At Rest
 
 ```
-~/.cognexia/data-lake/
+~/.threadkeeper/data-lake/
 ├── memory-{chat-id}/
 │   └── bridge.db                    ← Contains extracted memories
 │
-~/.cognexia/audit-logs/
+~/.threadkeeper/audit-logs/
 ├── audit-{timestamp}.jsonl          ← Security audit trail
 │
-~/.cognexia/.encryption-key          ← AES-256 key (mode 0o600)
+~/.threadkeeper/.encryption-key          ← AES-256 key (mode 0o600)
 │
 ~/.claude/hooks/
 ├── session-start.js                 ← SessionStart hook
@@ -269,7 +269,7 @@ Search: Database → Memory → Filter → Output
 
 ### Threat 3: Unauthorized Data Access
 
-**Scenario:** Attacker gains access to `.cognexia/` directory
+**Scenario:** Attacker gains access to `.threadkeeper/` directory
 
 **Mitigation:**
 1. All data stays on user's machine
@@ -314,9 +314,9 @@ Each log entry is a JSON object on its own line (JSONL format):
 
 ### Log Retention
 
-- Logs stored indefinitely in `~/.cognexia/audit-logs/`
+- Logs stored indefinitely in `~/.threadkeeper/audit-logs/`
 - One file per installation session
-- User can delete logs anytime: `rm -rf ~/.cognexia/audit-logs/*`
+- User can delete logs anytime: `rm -rf ~/.threadkeeper/audit-logs/*`
 
 ### Privacy of Audit Logs
 
@@ -419,7 +419,7 @@ A: They're gone. Create new ones on next installation.
 **Q: Is the hook signature checking enabled now?**  
 A: Hook is signed, but verification is v0.2 feature. Coming soon.
 
-**Q: What if someone gets my `.cognexia/` directory?**  
+**Q: What if someone gets my `.threadkeeper/` directory?**  
 A: They have access to all your memories (unless encrypted in v0.2+). Keep your home directory secure.
 
 **Q: Can I disable security features?**  

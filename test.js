@@ -57,9 +57,9 @@ test('Environment: Detect Claude Code installation', () => {
 });
 
 test('Environment: Check data lake exists', () => {
-  const dataLakePath = join(homedir(), '.cognexia', 'data-lake');
+  const dataLakePath = join(homedir(), '.threadkeeper', 'data-lake');
   if (!existsSync(dataLakePath)) {
-    throw new Error('No memory data found. Run Cognexia extraction first.');
+    throw new Error('No memory data found. Run Threadkeeper installation first.');
   }
 });
 

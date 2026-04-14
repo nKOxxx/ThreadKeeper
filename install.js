@@ -132,7 +132,7 @@ try {
     console.log('  1. Start a new Claude Code session');
     console.log('  2. Threadkeeper will automatically inject relevant context');
     console.log('  3. Watch the console for injected memories\n');
-    console.log('🔐 Security logs: ~/.cognexia/audit-logs/');
+    console.log('🔐 Security logs: ~/.threadkeeper/audit-logs/');
     console.log('🔗 Documentation: https://github.com/threadkeeper/threadkeeper\n');
 
   } catch (error) {

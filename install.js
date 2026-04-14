@@ -40,22 +40,24 @@ async function install() {
  * Automatically injects context from previous Claude Code sessions
  */
 
-const { execSync } = require('child_process');
-const path = require('path');
+import { execSync } from 'child_process';
 
 try {
-  // Run threadkeeper context retrieval
+  // Run threadkeeper hook command
   const result = execSync('npx threadkeeper hook:session-start', {
     encoding: 'utf-8',
-    stdio: 'pipe'
+    stdio: ['pipe', 'pipe', 'pipe']
   });
 
+  // Output the result to be captured by Claude Code
   if (result) {
-    console.log(result);
+    process.stdout.write(result);
   }
+  process.exit(0);
 } catch (error) {
-  // Silently fail if threadkeeper not available
-  console.debug('[Threadkeeper] Hook execution skipped');
+  // Gracefully handle if threadkeeper command fails
+  process.stderr.write('[Threadkeeper] Hook execution failed: ' + error.message + '\\n');
+  process.exit(0); // Don't fail the session if hook fails
 }
 `;
 

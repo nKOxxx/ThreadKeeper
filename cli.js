@@ -41,14 +41,26 @@ async function main() {
     }
   } else if (command === 'hook:session-start') {
     try {
-      const { execSync } = await import('child_process');
-      execSync('node hooks/session-start.js', {
-        cwd: __dirname,
-        stdio: 'inherit'
-      });
+      const { ContextRetriever } = await import('./lib/context-retriever.js');
+
+      // Get the current chat context
+      const chatName = process.env.CLAUDE_CHAT_NAME || 'Unnamed Chat';
+
+      // Initialize context retriever
+      const retriever = new ContextRetriever();
+
+      // Search for relevant past context
+      const relevantContext = await retriever.search(chatName, { limit: 5 });
+
+      if (relevantContext && relevantContext.length > 0) {
+        // Format context for injection
+        const contextBlock = formatContextBlock(relevantContext);
+        console.log(contextBlock);
+      }
+      process.exit(0);
     } catch (error) {
-      console.error('Hook execution failed:', error.message);
-      process.exit(1);
+      // Silently fail on hook errors
+      process.exit(0);
     }
   } else if (command === 'test') {
     try {
@@ -77,6 +89,69 @@ async function main() {
     showHelp();
     process.exit(1);
   }
+}
+
+function formatContextBlock(memories) {
+  const sections = {
+    technologies: [],
+    decisions: [],
+    insights: [],
+    achievements: [],
+    problems: []
+  };
+
+  // Group memories by type
+  memories.forEach(memory => {
+    const type = memory.content_type || 'insight';
+    if (sections[type]) {
+      sections[type].push(memory.content);
+    }
+  });
+
+  // Build formatted block
+  let output = '\n[Threadkeeper] RELEVANT CONTEXT FROM YOUR PREVIOUS WORK:\n\n';
+
+  if (sections.decisions.length > 0) {
+    output += '📋 Key Decisions Made:\n';
+    sections.decisions.forEach((d, i) => {
+      output += `   ${i + 1}. ${d}\n`;
+    });
+    output += '\n';
+  }
+
+  if (sections.technologies.length > 0) {
+    output += '🔧 Technologies & Tools Used:\n';
+    sections.technologies.forEach((t, i) => {
+      output += `   ${i + 1}. ${t}\n`;
+    });
+    output += '\n';
+  }
+
+  if (sections.achievements.length > 0) {
+    output += '✅ Achievements:\n';
+    sections.achievements.forEach((a, i) => {
+      output += `   ${i + 1}. ${a}\n`;
+    });
+    output += '\n';
+  }
+
+  if (sections.insights.length > 0) {
+    output += '💡 Key Insights:\n';
+    sections.insights.forEach((i, idx) => {
+      output += `   ${idx + 1}. ${i}\n`;
+    });
+    output += '\n';
+  }
+
+  if (sections.problems.length > 0) {
+    output += '⚠️ Problems Solved:\n';
+    sections.problems.forEach((p, i) => {
+      output += `   ${i + 1}. ${p}\n`;
+    });
+    output += '\n';
+  }
+
+  return output;
 }
 
 function showHelp() {

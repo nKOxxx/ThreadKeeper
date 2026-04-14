@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# System
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.iml
+
+# Internal/build
+dist/
+build/
+.threadkeeper/
+
+# Internal documentation (not for public repo)
+MARKETING.md
+FINAL_VERIFICATION.txt
+SECURITY_FEATURES_SUMMARY.txt
+STATUS.txt
+INSTALL_CMD.txt
+PRE_LAUNCH_CHECKLIST.md
+README_FINAL.md
+BUILD_SUMMARY.md
+CHAT_SCREENING_FEATURE.md
+COMPLETION_SUMMARY.md
+EXECUTIVE_SUMMARY.md
+LAUNCH.md
+PROJECT_SUMMARY.md
+READY_TO_LAUNCH.md
+VERIFY.md
+TEST_RESULTS.md

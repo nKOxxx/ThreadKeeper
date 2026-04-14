@@ -1,0 +1,34 @@
+{
+  "name": "threadkeeper",
+  "version": "0.1.0",
+  "description": "Automatic context persistence across Claude Code sessions",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "threadkeeper": "./cli.js"
+  },
+  "scripts": {
+    "install": "node install.js",
+    "dev": "node dev.js"
+  },
+  "keywords": [
+    "claude",
+    "memory",
+    "context",
+    "persistence",
+    "productivity"
+  ],
+  "author": "Nikolas Tojanow",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/threadkeeper/threadkeeper.git"
+  },
+  "homepage": "https://github.com/threadkeeper/threadkeeper#readme",
+  "bugs": {
+    "url": "https://github.com/threadkeeper/threadkeeper/issues"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.6"
+  }
+}

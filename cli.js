@@ -84,6 +84,30 @@ async function main() {
       console.error('Test failed:', error.message);
       process.exit(1);
     }
+  } else if (command === 'uninstall') {
+    try {
+      console.log('\n🧵 Threadkeeper Uninstaller\n');
+      console.log('Run the uninstall script:');
+      console.log('  bash uninstall.sh\n');
+      console.log('Or manually remove:');
+      console.log('  rm ~/.claude/hooks/session-start.js');
+      console.log('  rm ~/.claude/hooks/.session-start.sha256');
+      console.log('  rm -rf ~/.threadkeeper/\n');
+      process.exit(0);
+    } catch (error) {
+      console.error('Uninstall failed:', error.message);
+      process.exit(1);
+    }
+  } else if (command === 'info') {
+    try {
+      const { ProjectDetector } = await import('./lib/project-detector.js');
+      console.log('\n🧵 Threadkeeper System Information\n');
+      console.log(ProjectDetector.generateReport());
+      process.exit(0);
+    } catch (error) {
+      console.error('Info command failed:', error.message);
+      process.exit(1);
+    }
   } else {
     console.error(`Unknown command: ${command}\n`);
     showHelp();
@@ -166,6 +190,8 @@ COMMANDS:
   install              Install Threadkeeper hook into Claude Code
   hook:session-start   Execute SessionStart hook (called by Claude Code)
   test                 Test Threadkeeper functionality
+  info                 Show project isolation report
+  uninstall            Show uninstall instructions
 
 OPTIONS:
   --version, -v        Show version
@@ -176,10 +202,15 @@ QUICK START:
   2. Test:    threadkeeper test
   3. Done! Open a new Claude Code chat.
 
+PROJECT ISOLATION:
+  Threadkeeper uses ~/.threadkeeper/ (separate from other projects)
+  Other projects are automatically detected and reported
+  See: threadkeeper info
+
 DOCUMENTATION:
   README.md            Full documentation
   QUICKSTART.md        2-minute quick start guide
-  LAUNCH.md            Launch information
+  SECURITY.md          Security features and threat model
 
 For more info: https://github.com/threadkeeper/threadkeeper
   `);

@@ -10,6 +10,7 @@ import { existsSync, mkdirSync, writeFileSync, readFileSync, copyFileSync } from
 import { execSync } from 'child_process';
 import { ChatScreener } from './lib/chat-screener.js';
 import { HookSigner } from './lib/hook-signer.js';
+import { ProjectDetector } from './lib/project-detector.js';
 
 const CLAUDE_HOOKS_DIR = join(homedir(), '.claude', 'hooks');
 const THREADKEEPER_HOOK_FILE = join(import.meta.url.replace('file://', ''), '..', 'hooks', 'session-start.js');
@@ -24,6 +25,10 @@ async function install() {
       console.error('❌ Claude Code not found. Please install Claude Code first.');
       process.exit(1);
     }
+
+    // Step 1.5: Validate no project conflicts and warn about others
+    ProjectDetector.validateConfiguration();
+    ProjectDetector.warnOnInstall();
 
     // Step 2: Create hooks directory if it doesn't exist
     console.log('✓ Setting up hooks directory...');

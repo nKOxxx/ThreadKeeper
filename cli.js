@@ -54,11 +54,13 @@ async function main() {
       if (relevantContext && relevantContext.length > 0) {
         // Format context for injection
         const contextBlock = formatContextBlock(relevantContext);
-        process.stdout.write(contextBlock);
+        if (contextBlock && contextBlock.trim()) {
+          process.stdout.write(contextBlock);
+        }
       }
       process.exit(0);
     } catch (error) {
-      // Silently fail on hook errors - don't break the session
+      process.stderr.write('[Threadkeeper] Debug: ' + error.message + '\n');
       process.exit(0);
     }
   } else if (command === 'test') {

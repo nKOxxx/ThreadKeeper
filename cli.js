@@ -43,23 +43,22 @@ async function main() {
     try {
       const { ContextRetriever } = await import('./lib/context-retriever.js');
 
-      // Get the current chat context
-      const chatName = process.env.CLAUDE_CHAT_NAME || 'Unnamed Chat';
-
       // Initialize context retriever
       const retriever = new ContextRetriever();
 
-      // Search for relevant past context
-      const relevantContext = await retriever.search(chatName, { limit: 5 });
+      // Search for relevant past context using broad search terms
+      // This ensures we find memories even if chat name isn't available
+      const broadSearchTerms = 'decision implementation architecture technology';
+      const relevantContext = await retriever.search(broadSearchTerms, { limit: 5 });
 
       if (relevantContext && relevantContext.length > 0) {
         // Format context for injection
         const contextBlock = formatContextBlock(relevantContext);
-        console.log(contextBlock);
+        process.stdout.write(contextBlock);
       }
       process.exit(0);
     } catch (error) {
-      // Silently fail on hook errors
+      // Silently fail on hook errors - don't break the session
       process.exit(0);
     }
   } else if (command === 'test') {

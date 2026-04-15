@@ -11,6 +11,7 @@ import { execSync } from 'child_process';
 import { ChatScreener } from './lib/chat-screener.js';
 import { HookSigner } from './lib/hook-signer.js';
 import { ProjectDetector } from './lib/project-detector.js';
+import { MemoryExporter } from './lib/memory-exporter.js';
 
 const CLAUDE_HOOKS_DIR = join(homedir(), '.claude', 'hooks');
 const THREADKEEPER_HOOK_FILE = join(import.meta.url.replace('file://', ''), '..', 'hooks', 'session-start.js');
@@ -135,8 +136,11 @@ try {
 
     console.log('📋 Next steps:\n');
     console.log('  1. Start a new Claude Code session');
-    console.log('  2. Threadkeeper will automatically inject relevant context');
-    console.log('  3. Watch the console for injected memories\n');
+    console.log('  2. Run: threadkeeper inject "chat name"');
+    console.log('  3. Copy the output into your new chat\n');
+    const exporter = new MemoryExporter();
+    console.log(`📁 Extracted insights: ${exporter.getExportPath()}/`);
+    console.log('   (Each chat has its own folder with memories.json and insights.md)\n');
     console.log('🔐 Security logs: ~/.threadkeeper/audit-logs/');
     console.log('🔗 Documentation: https://github.com/threadkeeper/threadkeeper\n');
 

@@ -27,9 +27,8 @@ async function install() {
       process.exit(1);
     }
 
-    // Step 1.5: Validate no project conflicts and warn about others
+    // Validate no project conflicts
     ProjectDetector.validateConfiguration();
-    ProjectDetector.warnOnInstall();
 
     // Step 2: Create hooks directory if it doesn't exist
     console.log('✓ Setting up hooks directory...');

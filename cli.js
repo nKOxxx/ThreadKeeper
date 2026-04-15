@@ -70,18 +70,83 @@ async function main() {
       // Initialize context retriever
       const retriever = new ContextRetriever();
 
-      // Search for relevant past context
-      const broadSearchTerms = 'decision implementation architecture technology';
-      const relevantContext = await retriever.search(broadSearchTerms, { limit: 5 });
+      // Check if chat names are provided as arguments
+      if (args.length > 0) {
+        // Get memories from specific chats
+        const memoriesMap = await retriever.getMemoriesFromChats(args);
+        const chatNames = Object.keys(memoriesMap);
 
-      if (relevantContext && relevantContext.length > 0) {
-        // Format context for manual injection (ready to copy/paste)
-        const contextBlock = formatContextBlock(relevantContext);
-        if (contextBlock && contextBlock.trim()) {
-          console.log(contextBlock);
+        if (chatNames.length === 0) {
+          console.log('\n[Threadkeeper] No chats found matching: ' + args.join(', ') + '\n');
+          console.log('Available chats:');
+          const allChats = await retriever.listAvailableChats();
+          allChats.forEach(chat => console.log('  - ' + chat.displayName));
+          process.exit(0);
+        }
+
+        // Analyze connections between chats
+        const connections = retriever.analyzeConnections(memoriesMap);
+
+        // Format and output
+        console.log('\n[Threadkeeper] CONTINUOUS CONTEXT - ' + chatNames.length + ' RELATED CHAT(S)\n');
+
+        // Output memories grouped by chat
+        chatNames.forEach((chatName, idx) => {
+          const memories = memoriesMap[chatName];
+          console.log(`📋 From "${chatName}":`);
+
+          const grouped = {};
+          memories.forEach(m => {
+            if (!grouped[m.content_type]) grouped[m.content_type] = [];
+            grouped[m.content_type].push(m.content);
+          });
+
+          Object.entries(grouped).forEach(([type, items]) => {
+            const emoji = {
+              'decision': '✓',
+              'technology': '🔧',
+              'achievement': '✅',
+              'insight': '💡'
+            }[type] || '•';
+            items.forEach((item, i) => {
+              console.log(`   ${emoji} ${item.substring(0, 80)}`);
+            });
+          });
+          console.log();
+        });
+
+        // Show connections if found
+        if (connections.sharedTechnologies.size > 0) {
+          console.log('🔗 SHARED TECHNOLOGIES:\n');
+          Array.from(connections.sharedTechnologies).forEach(tech => {
+            console.log(`   • ${tech}`);
+          });
+          console.log();
+        }
+
+        if (connections.commonThemes.size > 0) {
+          console.log('🔗 COMMON PATTERNS:\n');
+          Array.from(connections.commonThemes.entries())
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5)
+            .forEach(([theme, count]) => {
+              console.log(`   • ${theme} (mentioned ${count} times)`);
+            });
+          console.log();
         }
       } else {
-        console.log('\n[Threadkeeper] No relevant context found in your memory.\n');
+        // Default behavior: generic search across all chats
+        const broadSearchTerms = 'decision implementation architecture technology';
+        const relevantContext = await retriever.search(broadSearchTerms, { limit: 5 });
+
+        if (relevantContext && relevantContext.length > 0) {
+          const contextBlock = formatContextBlock(relevantContext);
+          if (contextBlock && contextBlock.trim()) {
+            console.log(contextBlock);
+          }
+        } else {
+          console.log('\n[Threadkeeper] No relevant context found in your memory.\n');
+        }
       }
       process.exit(0);
     } catch (error) {
@@ -235,9 +300,16 @@ OPTIONS:
 QUICK START:
   1. Install:  threadkeeper install
   2. Test:     threadkeeper test
-  3. Per session:
-     - Run:    threadkeeper inject
-     - Copy the output into your new Claude Code session
+  3. Per session (choose one):
+
+     Option A - Generic context across all chats:
+       threadkeeper inject
+       Copy the output into your new Claude Code session
+
+     Option B - Specific chats (maintains "red thread"):
+       threadkeeper inject "Chat Name 1" "Chat Name 2"
+       Shows connections between specific chats
+       Copy the output into your new Claude Code session
 
 PROJECT ISOLATION:
   Threadkeeper uses ~/.threadkeeper/ (separate from other projects)

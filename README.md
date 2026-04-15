@@ -111,25 +111,34 @@ Before storing, Threadkeeper:
 - 🔒 Logs all detections for your review
 - 🔒 Signs hook file for integrity verification
 
-### Step 3: Automatic Injection
+### Step 3: Manual Context Injection
 
 When you start a new Claude Code session:
-1. SessionStart hook fires automatically
-2. Threadkeeper searches your memories
-3. Finds relevant context (keywords from chat name)
-4. Injects top 5 memories into the chat
-5. Claude sees your previous work and builds on it
 
-**Performance:** <10ms per search (you won't notice it)
+1. **Open a new Claude Code chat**
+2. **Run in terminal:**
+   ```bash
+   threadkeeper inject
+   ```
+3. **Copy the output** from your terminal
+4. **Paste into Claude Code** at the start of your chat
+5. **Claude sees your previous work** and builds on it
+
+Threadkeeper searches your memories, finds relevant context, and outputs formatted blocks ready to paste. Takes 10 seconds per new session.
+
+**Alternative:** Pipe directly to clipboard (macOS):
+```bash
+threadkeeper inject | pbcopy
+```
 
 ---
 
 ## Features
 
-### ✅ Automatic Context Injection
-- Fire-and-forget installation
-- Works on every new Claude Code session
-- Zero manual effort required
+### ✅ Fast Context Injection
+- One command to retrieve context: `threadkeeper inject`
+- Ready-to-paste output in 10 seconds
+- Works with every new Claude Code session
 
 ### ✅ Chat Screening
 - Scans all existing chats during installation
@@ -166,48 +175,67 @@ When you start a new Claude Code session:
 
 ## Quick Start
 
-### 1. Install
+### 1. Install (one-time)
 
 ```bash
 npx threadkeeper install
 ```
 
-### 2. Verify
+Scans your chats, extracts ~1,200 memories, and prepares context for injection.
+
+### 2. Verify Installation
 
 ```bash
 threadkeeper test
 ```
 
-You should see output like:
+Should show: `✓ Found 5 relevant memories`
 
-```
-🧵 Testing Threadkeeper
+### 3. Per New Session
 
-✓ Found 5 relevant memories:
-
-1. [achievement] Implemented authentication system
-   Relevance: 10
-
-2. [decision] Using JWT + Redis for sessions
-   Relevance: 9
-
-...
+**In your terminal:**
+```bash
+threadkeeper inject
 ```
 
-### 3. Start Using
+**In Claude Code:**
+- Open a new chat
+- Paste the output from `threadkeeper inject`
+- Claude now has context from your previous work
 
-Open a new Claude Code chat. That's it! Threadkeeper automatically injects relevant context.
+You'll see output like:
+
+```
+[Threadkeeper] RELEVANT CONTEXT FROM YOUR PREVIOUS WORK:
+
+✅ Achievements:
+   1. Implemented authentication system
+   2. Set up database schema
+   3. Deployed to production
+
+📋 Key Decisions Made:
+   1. Using JWT + Redis for sessions
+   2. PostgreSQL for data persistence
+```
+
+Just paste this at the start of your new chat, and Claude will build on your previous work!
 
 ---
 
 ## Commands
 
 ```bash
-# Install Threadkeeper
+# Install Threadkeeper (one-time)
 threadkeeper install
+
+# Inject context into new session (per session)
+threadkeeper inject
 
 # Verify it's working
 threadkeeper test
+
+# Show system configuration
+threadkeeper info
 
 # Show help
 threadkeeper --help

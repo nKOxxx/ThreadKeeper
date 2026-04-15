@@ -63,6 +63,31 @@ async function main() {
       process.stderr.write('[Threadkeeper] Debug: ' + error.message + '\n');
       process.exit(0);
     }
+  } else if (command === 'inject') {
+    try {
+      const { ContextRetriever } = await import('./lib/context-retriever.js');
+
+      // Initialize context retriever
+      const retriever = new ContextRetriever();
+
+      // Search for relevant past context
+      const broadSearchTerms = 'decision implementation architecture technology';
+      const relevantContext = await retriever.search(broadSearchTerms, { limit: 5 });
+
+      if (relevantContext && relevantContext.length > 0) {
+        // Format context for manual injection (ready to copy/paste)
+        const contextBlock = formatContextBlock(relevantContext);
+        if (contextBlock && contextBlock.trim()) {
+          console.log(contextBlock);
+        }
+      } else {
+        console.log('\n[Threadkeeper] No relevant context found in your memory.\n');
+      }
+      process.exit(0);
+    } catch (error) {
+      console.error('[Threadkeeper] Error retrieving context: ' + error.message);
+      process.exit(1);
+    }
   } else if (command === 'test') {
     try {
       const { ContextRetriever } = await import('./lib/context-retriever.js');
@@ -197,8 +222,8 @@ USAGE:
   threadkeeper [command]
 
 COMMANDS:
-  install              Install Threadkeeper hook into Claude Code
-  hook:session-start   Execute SessionStart hook (called by Claude Code)
+  install              Install Threadkeeper and extract memories from your chats
+  inject               Get context ready to paste into a new Claude Code session
   test                 Test Threadkeeper functionality
   info                 Show project isolation report
   uninstall            Show uninstall instructions
@@ -208,9 +233,11 @@ OPTIONS:
   --help, -h          Show this help message
 
 QUICK START:
-  1. Install: threadkeeper install
-  2. Test:    threadkeeper test
-  3. Done! Open a new Claude Code chat.
+  1. Install:  threadkeeper install
+  2. Test:     threadkeeper test
+  3. Per session:
+     - Run:    threadkeeper inject
+     - Copy the output into your new Claude Code session
 
 PROJECT ISOLATION:
   Threadkeeper uses ~/.threadkeeper/ (separate from other projects)

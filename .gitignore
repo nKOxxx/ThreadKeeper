@@ -30,6 +30,9 @@ dist/
 build/
 .threadkeeper/
 
+# Exported memory folders (contain user-specific paths)
+Users-*/
+
 # Internal documentation (not for public repo)
 MARKETING.md
 FINAL_VERIFICATION.txt
@@ -47,3 +50,5 @@ PROJECT_SUMMARY.md
 READY_TO_LAUNCH.md
 VERIFY.md
 TEST_RESULTS.md
+PROJECT_ISOLATION.md
+SECURITY_IMPLEMENTATION.md
